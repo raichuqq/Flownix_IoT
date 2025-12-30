@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "author": "Flownix",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 67.2, "left": 350.4, "attrs": {} },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -153.3,
+      "left": 378.6,
+      "attrs": { "temperature": "24.6", "humidity": "50" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": 102.4,
+      "left": 620,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultra1",
+      "top": -8.1,
+      "left": 63.1,
+      "attrs": { "distance": "49" }
+    },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 270, "left": 520, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": -20, "left": 520, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:3V3", "dht1:VCC", "orange", [ "h-38.21", "v-48", "h76.8" ] ],
+    [ "dht1:GND", "esp:GND.1", "black", [ "v67.2", "h-134.4", "v192" ] ],
+    [ "dht1:SDA", "esp:15", "purple", [ "v38.4", "h96.1", "v240" ] ],
+    [ "vcc1:VCC", "lcd1:VCC", "red", [] ],
+    [ "gnd1:GND", "lcd1:GND", "black", [] ],
+    [ "lcd1:SDA", "esp:21", "green", [] ],
+    [ "lcd1:SCL", "esp:22", "blue", [ "h-153.6", "v-45.3" ] ],
+    [ "ultra1:VCC", "esp:5V", "red", [ "v76.8", "h172.8", "v105.6" ] ],
+    [ "ultra1:GND", "esp:GND.1", "black", [ "v19.2", "h190.61" ] ],
+    [ "ultra1:TRIG", "esp:26", "green", [ "v38.4", "h201.2", "v57.6" ] ],
+    [ "ultra1:ECHO", "esp:27", "blue", [ "v57.6", "h172", "v48" ] ]
+  ],
+  "dependencies": {}
+}
