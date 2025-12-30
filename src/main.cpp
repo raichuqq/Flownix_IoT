@@ -6,34 +6,26 @@
 #include <LiquidCrystal_I2C.h>
 #include "DHTesp.h"
 
-// WiFi (Wokwi)
 const char* ssid = "Wokwi-GUEST";
 const char* password = "";
 
-// Backend host + path
 const char* host = "flownix-backend.onrender.com";
 const char* path = "/api/SensorReading";
 
-// Sensor IDs
 const char* temperatureSensorId = "008ee850-a61f-4aee-aa20-060897b6d6a4";
 const char* waterLevelSensorId  = "9746cc6d-f517-44ed-9197-09988bf9f76c";
 
-// DHT22
 #define DHTPIN 15
 DHTesp dht;
 
-// HC-SR04
 #define TRIG_PIN 26
 #define ECHO_PIN 27
 
-// LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-// Timer
 unsigned long lastUploadTime = 0;
 const unsigned long uploadInterval = 30000; // 30s
 
-// Cached IP (обход DNS/балансировки)
 IPAddress backendIp;
 
 void lcdStatus(const String& a, const String& b = "") {
@@ -63,7 +55,6 @@ void warmupServer() {
   HTTPClient http;
   http.setTimeout(60000);
 
-  // warmup по хосту (пусть будет 302 — норм)
   String url = String("https://") + host + "/";
   if (http.begin(client, url)) {
     http.GET();
@@ -71,7 +62,6 @@ void warmupServer() {
   }
 }
 
-// POST на IP (стабильнее), но Host заголовок обязателен
 bool postValue(const char* sensorId, float value) {
   StaticJsonDocument<128> doc;
   doc["sensorId"] = sensorId;
@@ -101,7 +91,7 @@ bool postValue(const char* sensorId, float value) {
 
     http.addHeader("Content-Type", "application/json");
     http.addHeader("Connection", "close");
-    http.addHeader("Host", host); // ключевой момент для TLS/SNI при IP
+    http.addHeader("Host", host); 
 
     Serial.print("[HTTP] POST ");
     Serial.println(url);
@@ -121,7 +111,6 @@ bool postValue(const char* sensorId, float value) {
     Serial.println(code);
     http.end();
 
-    // чуть подождать и попробовать ещё раз
     delay(1200 * attempt);
   }
 
@@ -154,10 +143,9 @@ void setup() {
   lcdStatus("WiFi connected", WiFi.localIP().toString());
   delay(800);
 
-  // Резолвим IP 1 раз и используем дальше
   if (!WiFi.hostByName(host, backendIp)) {
     Serial.println("[DNS] FAIL");
-    backendIp = IPAddress(216, 24, 57, 7); // запасной вариант (можешь убрать)
+    backendIp = IPAddress(216, 24, 57, 7); 
   }
   Serial.print("[DNS] Using IP: ");
   Serial.println(backendIp);
@@ -188,7 +176,7 @@ void loop() {
   lcd.print(distance);
   lcd.print("cm   ");
 
-  // Send every 30s
+
   if (millis() - lastUploadTime >= uploadInterval) {
     lcdStatus("Sending data...", "");
 
