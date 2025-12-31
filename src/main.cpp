@@ -145,7 +145,7 @@ void setup() {
 
   if (!WiFi.hostByName(host, backendIp)) {
     Serial.println("[DNS] FAIL");
-    backendIp = IPAddress(216, 24, 57, 7); 
+    backendIp = IPAddress(216, 24, 57, 7);
   }
   Serial.print("[DNS] Using IP: ");
   Serial.println(backendIp);
@@ -161,7 +161,6 @@ void loop() {
 
   long distance = readDistanceCM();
 
-  // LCD
   lcd.setCursor(0, 0);
   lcd.print("T:");
   lcd.print(temperature, 1);
@@ -175,7 +174,6 @@ void loop() {
   lcd.print("Water:");
   lcd.print(distance);
   lcd.print("cm   ");
-
 
   if (millis() - lastUploadTime >= uploadInterval) {
     lcdStatus("Sending data...", "");
